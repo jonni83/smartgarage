@@ -26,14 +26,14 @@ class Relay(Component):
 
         self.setmode(mode)
 
-        self.LIGHTON = GPIO.LOW
-        self.LIGHTOFF = GPIO.HIGH
-        self.RED = red
-        self.YELLOW = yellow
-        self.GREEN = green
+        self.light_on = GPIO.LOW
+        self.light_off = GPIO.HIGH
+        self.red = red
+        self.yellow = yellow
+        self.green = green
 
-        for pin in self.RED, self.YELLOW, self.GREEN:
-            GPIO.setup(pin, GPIO.OUT, self.LIGHTOFF)
+        for pin in self.red, self.yellow, self.green:
+            GPIO.setup(pin, GPIO.OUT, self.light_off)
 
     def turn_on_only(self, color):
         """ Turn on only the color light specified.
@@ -43,10 +43,10 @@ class Relay(Component):
         # software debouce: wait .5 seconds
         time.sleep(.5)
 
-        for pin in self.RED, self.YELLOW, self.GREEN:
-            GPIO.output(pin, self.LIGHTOFF)
+        for pin in self.red, self.yellow, self.green:
+            GPIO.output(pin, self.light_off)
 
-        GPIO.output(color, self.LIGHTON)
+        GPIO.output(color, self.light_on)
 
 
 class USonic(Component):
@@ -58,35 +58,35 @@ class USonic(Component):
 
         self.setmode(mode)
         
-        self.TRIGGER = TRIGGER
-        self.ECHO = ECHO
+        self.trigger = TRIGGER
+        self.echo = ECHO
 
-        GPIO.setup(self.TRIGGER, GPIO.OUT)
-        GPIO.setup(self.ECHO, GPIO.IN)
+        GPIO.setup(self.trigger, GPIO.OUT)
+        GPIO.setup(self.echo, GPIO.IN)
 
         # sensor must be primed to function properly
-        GPIO.output(self.TRIGGER, GPIO.LOW)
+        GPIO.output(self.trigger, GPIO.LOW)
         time.sleep(0.3)
 
     def get_distance(self):
         """ Get distance measured in centimeters"""
 
-        GPIO.output(self.TRIGGER, GPIO.LOW)
+        GPIO.output(self.trigger, GPIO.LOW)
         time.sleep(0.3)
 
-        GPIO.output(self.TRIGGER, True)
+        GPIO.output(self.trigger, True)
         time.sleep(0.00001)
-        GPIO.output(self.TRIGGER, False)
+        GPIO.output(self.trigger, False)
 
         signalon = 0
         signaloff = 0
 
         # wait for signal to start
-        while GPIO.input(self.ECHO) == 0:
+        while GPIO.input(self.echo) == 0:
             signalstart = time.time()
 
         # wait for signal to stop
-        while GPIO.input(self.ECHO) == 1:
+        while GPIO.input(self.echo) == 1:
             signalstop = time.time()
 
         timepassed = signalstop - signalstart
@@ -103,11 +103,11 @@ class HallEffectPair(Component):
 
         self.setmode(mode)
 
-        self.OPENDOOR = OPENDOOR
-        self.CLOSEDDOOR = CLOSEDDOOR
+        self.open_door = OPENDOOR
+        self.closed_door = CLOSEDDOOR
 
-        GPIO.setup(self.OPENDOOR, GPIO.IN)
-        GPIO.setup(self.CLOSEDDOOR, GPIO.IN)
+        GPIO.setup(self.open_door, GPIO.IN)
+        GPIO.setup(self.closed_door, GPIO.IN)
 
     def add_event_detect(self, channel, callback):
         GPIO.add_event_detect(channel, GPIO.FALLING, callback=callback, bouncetime=1000)
