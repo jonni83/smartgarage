@@ -5,9 +5,12 @@ import RPi.GPIO as GPIO
 import time
 
 class Component(object):
+    def __init__(self, mode):
+        self.setmode(mode)
+
     def setmode(self, mode):
-       """ set the mode of the GPIO board to either BOARD or BCM"""
-       GPIO.setmode(mode)
+        """ set the mode of the GPIO board to either BOARD or BCM"""
+        GPIO.setmode(mode)
 	
     def cleanup(self):
         """ Frees the pins.  This avoids errors if the service is restarted."""
@@ -28,7 +31,7 @@ class Relay(Component):
         The default channel of the green light is 18.
         The default board mode is set to GPIO.BCM."""
 
-        self.setmode(mode)
+        super(Relay, self).__init__(mode)
 
         self.red = red
         self.yellow = yellow
@@ -62,7 +65,7 @@ class USonic(Component):
         The default channel of the echo pin is 25.
         The default board mode is set to GPIO.BCM."""
 
-        self.setmode(mode)
+        super(USonic, self).__init__(mode)
         
         self.trigger = TRIGGER
         self.echo = ECHO
@@ -107,7 +110,7 @@ class HallEffectPair(Component):
         The default channel of the sensor for the closed position is 4.
         The default board mode is set to GPIO.BCM."""
 
-        self.setmode(mode)
+        super(HallEffectPair, self).__init__(mode)
 
         self.open_door = OPENDOOR
         self.closed_door = CLOSEDDOOR
