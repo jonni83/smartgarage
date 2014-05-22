@@ -38,7 +38,7 @@ class Relay(Component):
         self.green = green
 
         for pin in self.red, self.yellow, self.green:
-            GPIO.setup(pin, GPIO.OUT, LIGHT_OFF)
+            GPIO.setup(pin, GPIO.OUT, self.LIGHT_OFF)
 
     def turn_on_only(self, color):
         """ Turn on only the color light specified.
@@ -53,9 +53,9 @@ class Relay(Component):
         time.sleep(.5)
 
         for pin in self.red, self.yellow, self.green:
-            GPIO.output(pin, LIGHT_OFF)
+            GPIO.output(pin, self.LIGHT_OFF)
 
-        GPIO.output(color, LIGHT_ON)
+        GPIO.output(color, self.LIGHT_ON)
 
 
 class USonic(Component):
