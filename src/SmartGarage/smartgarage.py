@@ -16,6 +16,10 @@ class Component(object):
 
 class Relay(Component):
 
+    """ unintuitive mapping """
+    LIGHT_ON = GPIO.LOW
+    LIGHT_OFF = GPIO.HIGH
+
     def __init__(self, red=24, yellow=23, green=18, mode=GPIO.BCM):
         """ Defines the GPIO channels for the lights in the stoplight connected
         to a 4-channel relay.
@@ -26,14 +30,12 @@ class Relay(Component):
 
         self.setmode(mode)
 
-        self.light_on = GPIO.LOW
-        self.light_off = GPIO.HIGH
         self.red = red
         self.yellow = yellow
         self.green = green
 
         for pin in self.red, self.yellow, self.green:
-            GPIO.setup(pin, GPIO.OUT, self.light_off)
+            GPIO.setup(pin, GPIO.OUT, LIGHT_OFF)
 
     def turn_on_only(self, color):
         """ Turn on only the color light specified.
@@ -44,9 +46,9 @@ class Relay(Component):
         time.sleep(.5)
 
         for pin in self.red, self.yellow, self.green:
-            GPIO.output(pin, self.light_off)
+            GPIO.output(pin, LIGHT_OFF)
 
-        GPIO.output(color, self.light_on)
+        GPIO.output(color, LIGHT_ON)
 
 
 class USonic(Component):
