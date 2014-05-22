@@ -42,6 +42,10 @@ class Relay(Component):
         There is a built-in software debounce which is actually attempting to mitigate
         a potential ground loop problem."""
 
+        """ validate input """
+	if color not in [self.red, self.yellow, self.green]:
+	    return
+
         # software debouce: wait .5 seconds
         time.sleep(.5)
 
