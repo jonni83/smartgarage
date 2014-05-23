@@ -2,7 +2,7 @@
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
 import RPi.GPIO as GPIO
-import time
+from time import time, sleep
 
 class Component(object):
     def __init__(self, mode):
@@ -50,7 +50,7 @@ class Relay(Component):
 	    return
 
         # software debouce: wait .5 seconds
-        time.sleep(.5)
+        sleep(.5)
 
         for pin in self.red, self.yellow, self.green:
             GPIO.output(pin, self.LIGHT_OFF)
@@ -75,16 +75,16 @@ class USonic(Component):
 
         # sensor must be primed to function properly
         GPIO.output(self.trigger, GPIO.LOW)
-        time.sleep(0.3)
+        sleep(0.3)
 
     def get_distance(self):
         """ Get distance measured in centimeters"""
 
         GPIO.output(self.trigger, GPIO.LOW)
-        time.sleep(0.3)
+        sleep(0.3)
 
         GPIO.output(self.trigger, True)
-        time.sleep(0.00001)
+        sleep(0.00001)
         GPIO.output(self.trigger, False)
 
         signalon = 0
@@ -92,11 +92,11 @@ class USonic(Component):
 
         # wait for signal to start
         while GPIO.input(self.echo) == 0:
-            signalstart = time.time()
+            signalstart = time()
 
         # wait for signal to stop
         while GPIO.input(self.echo) == 1:
-            signalstop = time.time()
+            signalstop = time()
 
         timepassed = signalstop - signalstart
 
