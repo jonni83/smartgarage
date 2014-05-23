@@ -87,20 +87,20 @@ class USonic(Component):
         sleep(0.00001)
         GPIO.output(self.trigger, False)
 
-        signalon = 0
-        signaloff = 0
+        signal_start = 0
+        signal_stop = 0
 
         # wait for signal to start
         while GPIO.input(self.echo) == 0:
-            signalstart = time()
+            signal_start = time()
 
         # wait for signal to stop
         while GPIO.input(self.echo) == 1:
-            signalstop = time()
+            signal_stop = time()
 
-        timepassed = signalstop - signalstart
+        time_passed = signal_stop - signal_start
 
-        return timepassed * 17000
+        return time_passed * 17000
 
 
 class HallEffectPair(Component):
