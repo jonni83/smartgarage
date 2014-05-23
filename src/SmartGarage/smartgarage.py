@@ -59,7 +59,7 @@ class Relay(Component):
 
 
 class USonic(Component):
-    def __init__(self, TRIGGER=7, ECHO=8, mode=GPIO.BCM):
+    def __init__(self, trigger=7, echo=8, mode=GPIO.BCM):
         """ Defines the GPIO channels for an ultrasonic distance sensor.
         The default channel of the trigger pin is 22.
         The default channel of the echo pin is 25.
@@ -67,8 +67,8 @@ class USonic(Component):
 
         super(USonic, self).__init__(mode)
         
-        self.trigger = TRIGGER
-        self.echo = ECHO
+        self.trigger = trigger
+        self.echo = echo
 
         GPIO.setup(self.trigger, GPIO.OUT)
         GPIO.setup(self.echo, GPIO.IN)
@@ -104,7 +104,7 @@ class USonic(Component):
 
 
 class HallEffectPair(Component):
-    def __init__(self, OPENDOOR=17, CLOSEDDOOR=4, mode=GPIO.BCM):
+    def __init__(self, open_door=17, closed_door=4, mode=GPIO.BCM):
         """ Defines the GPIO channels for reading the status of two hall effect sensors.
         The default channel of the sensor for the open position is 17.
         The default channel of the sensor for the closed position is 4.
@@ -112,8 +112,8 @@ class HallEffectPair(Component):
 
         super(HallEffectPair, self).__init__(mode)
 
-        self.open_door = OPENDOOR
-        self.closed_door = CLOSEDDOOR
+        self.open_door = open_door
+        self.closed_door = closed_door
 
         GPIO.setup(self.open_door, GPIO.IN)
         GPIO.setup(self.closed_door, GPIO.IN)
