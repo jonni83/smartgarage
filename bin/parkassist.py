@@ -18,9 +18,9 @@ def ConfigSectionMap(section):
         try:
             dict1[option] = Config.get(section, option)
             if dict1[option] == -1:
-                DebugPrint("skip: %s" % option)
+                DebugPrint("skip: {0}".format(option))
         except:
-            print("exception on %s!" % option)
+            "exception on {0}!".format(option)
             dict1[option] = None
     return dict1
 
