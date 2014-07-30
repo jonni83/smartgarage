@@ -1,0 +1,18 @@
+extends layout
+
+block headextras
+  link(rel='stylesheet', href='//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css')
+  script(src='//code.jquery.com/jquery-1.10.2.js')
+  script(src='//code.jquery.com/ui/1.11.0/jquery-ui.js')
+
+block content
+  //- h1= title
+  //- p Welcome to #{title}
+  //- p= 'The left door: ' + leftdoor
+  //- p= 'The right door: ' + rightdoor
+  //- p= 'The left bay: ' + leftbay
+  //- p= 'The right bay: ' + rightbay
+  #garage.ui-corner-all
+    #left.bay.open
+    #right.bay.closed
+      img.car(src="images/car.png")

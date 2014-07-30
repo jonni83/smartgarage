@@ -1,0 +1,37 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a {
+  color: #00b7ff;
+}
+#garage {
+  margin: auto;
+  width: 40em;
+  height: 20em;
+  background-color: #808080;
+  position: relative;
+  border-style: ridge;
+  border-width: 1em;
+}
+.bay {
+  margin: 1em;
+  width: 45%;
+  background-color: #808080;
+  float: left;
+}
+.open {
+  height: 20em;
+}
+.closed {
+  height: 19.25em;
+  border-bottom-style: ridge;
+  border-bottom-width: 0.75em;
+  border-bottom-color: SlateGray;
+}
+.car {
+  display: block;
+  margin: auto;
+  height: 100%;
+  width: auto;
+}
