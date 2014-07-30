@@ -24,4 +24,5 @@ config.read(configfile)
 print config.sections()
 
 if __name__ == "__main__":
-    
+    print config.sections()    
+    print config.get("HallEffect","leftclosed")

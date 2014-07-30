@@ -40,6 +40,24 @@ class Relay(Component):
         for pin in self.red, self.yellow, self.green:
             GPIO.setup(pin, GPIO.OUT, Relay.LIGHT_OFF)
 
+    def turn_off(self, color):
+        if color not in [self.red, self.yellow, self.green]:
+            return
+
+        GPIO.output(color, Relay.LIGHT_OFF)
+
+    def turn_off_all(self):
+        for pin in self.red, self.yellow, self.green:
+            GPIO.output(pin, Relay.LIGHT_OFF)
+
+    def turn_on(self, color):
+        if color not in [self.red, self.yellow, self.green]:
+            return
+        
+        sleep(.5)
+
+        GPIO.output(color, Relay.LIGHT_ON)
+        
     def turn_on_only(self, color):
         """ Turn on only the color light specified.
         There is a built-in software debounce which is actually attempting to mitigate
@@ -52,8 +70,7 @@ class Relay(Component):
         # software debouce: wait .5 seconds
         sleep(.5)
 
-        for pin in self.red, self.yellow, self.green:
-            GPIO.output(pin, Relay.LIGHT_OFF)
+	self.turn_off_all()
 
         GPIO.output(color, Relay.LIGHT_ON)
 
@@ -119,4 +136,7 @@ class HallEffectPair(Component):
         GPIO.setup(self.closed_door, GPIO.IN)
 
     def add_event_detect(self, channel, callback):
-        GPIO.add_event_detect(channel, GPIO.FALLING, callback=callback, bouncetime=1000)
+        GPIO.add_event_detect(channel, GPIO.FALLING, callback=callback, bouncetime=2000)
+
+    def get_state(self, channel):
+        return GPIO.input(channel)
