@@ -11,10 +11,10 @@ router.get('/', function(req, res) {
     scriptPath: '',
     args: ''
   };
-  var leftdoor;
-  var rightdoor;
-  var leftbay;
-  var rightbay;
+  var leftdoor = false;
+  var rightdoor = true;
+  var leftbay = false;
+  var rightbay = true;
 
   // console.log("========== is the left door open =======")
   // client.invoke("isDoorOpen", "left", function(error, res, more) {
@@ -52,7 +52,7 @@ router.get('/', function(req, res) {
   // res.locals.rightbay = rightbay;
     
   // res.render('index', { title: 'Express' });
-  res.render('index', { title: 'Express', leftdoor: leftdoor });
+  res.render('index', { title: 'Express', leftdoor: leftdoor, rightdoor: rightdoor, leftbay: leftbay, rightbay: rightbay });
 });
 
 module.exports = router;
