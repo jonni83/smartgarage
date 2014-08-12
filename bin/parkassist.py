@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
-import sys, os.path
+import sys
+import os.path
 sys.path.append(os.path.expanduser('/home/pi/development/smartgarage/src'))
 import ConfigParser
 from datetime import datetime, timedelta
@@ -12,11 +13,11 @@ from SmartGarage.smartgarage import USonic
 from SmartGarage.smartgarage import HallEffectPair
 
 
-
 configfile = "smartgarage.ini"
 config = ConfigParser.ConfigParser()
 left_open_time = datetime.now() - timedelta(minutes=1)
 right_open_time = datetime.now() - timedelta(minutes=1)
+
 
 def ConfigSectionMap(section):
     dict1 = {}
@@ -25,11 +26,12 @@ def ConfigSectionMap(section):
         try:
             dict1[option] = config.get(section, option)
             if dict1[option] == -1:
-                DebugPrint("skip: {0}".format(option))
+                print("skip: {0}".format(option))
         except:
             "exception on {0}!".format(option)
             dict1[option] = None
     return dict1
+
 
 def park_assist(channel):
     usonic = USonic()
@@ -46,24 +48,21 @@ def park_assist(channel):
             relay.turn_on_only(relay.red)
         time.sleep(1)
 
-def wait_for_door():
-    halleffectpair = HallEffectPair()
-    
-    while 1:
-        time.sleep(600)
 
 def set_left_time(channel):
     global left_open_time
     left_open_time = datetime.now()
 
+
 def set_right_time(channel):
     global right_open_time
     right_open_time = datetime.now()
 
+
 def distance_threshold(time, us):
     if datetime.now()-time > timedelta(seconds=60):
         return 4
-    
+
     distance = us.get_distance()
     # 10 feet
     if distance > 305:
@@ -73,6 +72,7 @@ def distance_threshold(time, us):
         return 2
     else:
         return 1
+
 
 if __name__ == "__main__":
     config.read(configfile)
@@ -87,35 +87,39 @@ if __name__ == "__main__":
     us = ConfigSectionMap("UltraSonic")
     re = ConfigSectionMap("Relay")
 
-    halleffectleft = HallEffectPair(int(he['leftopen']), int(he['leftclosed']), mode)
-    halleffectright = HallEffectPair(int(he['rightopen']), int(he['rightclosed']), mode)
+    halleffectleft = HallEffectPair(int(he['leftopen']), int(he['leftclosed']),
+                                    mode)
+    halleffectright = HallEffectPair(int(he['rightopen']),
+                                     int(he['rightclosed']), mode)
     ultrasonicleft = USonic(int(us['lefttrigger']), int(us['leftecho']), mode)
-    ultrasonicright = USonic(int(us['righttrigger']), int(us['rightecho']), mode)
+    ultrasonicright = USonic(int(us['righttrigger']), int(us['rightecho']),
+                             mode)
     relay = Relay(int(re['red']), int(re['yellow']), int(re['green']), mode)
-    
-    halleffectleft.add_event_detect(channel=halleffectleft.open_door, callback=set_left_time)
-    halleffectright.add_event_detect(channel=halleffectright.open_door, callback=set_right_time)
+
+    halleffectleft.add_event_detect(channel=halleffectleft.open_door,
+                                    callback=set_left_time)
+    halleffectright.add_event_detect(channel=halleffectright.open_door,
+                                     callback=set_right_time)
 
     while 1:
-        left_threshold = distance_threshold(left_open_time,ultrasonicleft)
-        right_threshold = distance_threshold(right_open_time,ultrasonicright)
+        left_threshold = distance_threshold(left_open_time, ultrasonicleft)
+        right_threshold = distance_threshold(right_open_time, ultrasonicright)
         thresholds = [left_threshold, right_threshold]
         threshold = min(thresholds)
 
         if threshold == 1:
-            #red light
+            # red light
             relay.turn_on_only(relay.red)
         elif threshold == 2:
-            #yellow light
+            # yellow light
             relay.turn_on_only(relay.yellow)
         elif threshold == 3:
-            #green light
+            # green light
             relay.turn_on_only(relay.green)
         elif threshold == 4:
-            #no light
+            # no light
             relay.turn_off_all()
         else:
-            #error and no light
+            # error and no light
             print "Error: Threshold incorrectly set"
             relay.turn_off_all()
- 

@@ -1,20 +1,19 @@
 #!/usr/bin/env python
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
-import sys, os.path
+import sys
+import os.path
 sys.path.append(os.path.expanduser('/home/pi/development/smartgarage/src'))
 import ConfigParser
-from datetime import datetime, timedelta
-import time
 import RPi.GPIO as GPIO
 import zerorpc
-from SmartGarage.smartgarage import Relay
 from SmartGarage.smartgarage import USonic
 from SmartGarage.smartgarage import HallEffectPair
 import faulthandler
 faulthandler.enable()
 import logging
 logging.basicConfig()
+
 
 class GarageServer(object):
     def _ConfigSectionMap(self, config, section):
@@ -25,7 +24,7 @@ class GarageServer(object):
             try:
                 dict1[option] = config.get(section, option)
                 if dict1[option] == -1:
-                    DebugPrint("skip: {0}".format(option))
+                    print("skip: {0}".format(option))
             except:
                 "exception on {0}!".format(option)
                 dict1[option] = None
@@ -47,18 +46,18 @@ class GarageServer(object):
             mode = GPIO.BOARD
         else:
             mode = ''
-    
+
         return mode
 
     def isDoorOpen(self, door):
         """Checks to see if the specified `door` is open.
-        
+
         Parameters
         ----------
         door : str
-            Acceptable values are right or left, otherwise object 
+            Acceptable values are right or left, otherwise object
             defaults will be used.
-        
+
         Returns
         -------
         bool
@@ -71,11 +70,11 @@ class GarageServer(object):
         he = self._ConfigSectionMap(config, "HallEffect")
 
         if door == "right":
-            #setup right sensor
+            # setup right sensor
             opened = int(he['rightopen'])
             closed = int(he['rightclosed'])
         elif door == "left":
-            #setup left sensor
+            # setup left sensor
             opened = int(he['leftopen'])
             closed = int(he['leftclosed'])
 
@@ -93,13 +92,13 @@ class GarageServer(object):
 
     def isBayOccupied(self, door):
         """Checks to see if the specified `bay` is open.
-        
+
         Parameters
         ----------
         door : str
-            Acceptable values are right or left, otherwise object 
+            Acceptable values are right or left, otherwise object
             defaults will be used.
-        
+
         Returns
         -------
         bool
@@ -111,11 +110,11 @@ class GarageServer(object):
         us = self._ConfigSectionMap(config, "UltraSonic")
 
         if door == "right":
-            #setup right sensor
+            # setup right sensor
             trigger = int(us['righttrigger'])
             echo = int(us['rightecho'])
         elif door == "left":
-            #setup left sensor
+            # setup left sensor
             trigger = int(us['lefttrigger'])
             echo = int(us['leftecho'])
 
@@ -131,7 +130,7 @@ class GarageServer(object):
         Parameters
         ----------
         name : str
-        
+
         Returns
         -------
         str
