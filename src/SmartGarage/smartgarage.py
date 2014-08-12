@@ -4,22 +4,39 @@
 import RPi.GPIO as GPIO
 from time import time, sleep
 
+
 class Component(object):
+    """This is an abstract class for any component.
+    
+    Args:
+        mode (int): The GPIO constant GPIO.BCM or GPIO.BOARD
+    """
+
     def __init__(self, mode):
         self.setmode(mode)
 
     def setmode(self, mode):
-        """ set the mode of the GPIO board to either BOARD or BCM"""
+        """ Set the mode of the GPIO board to either BOARD or BCM"""
         GPIO.setmode(mode)
-	
+
     def cleanup(self):
-        """ Frees the pins.  This avoids errors if the service is restarted."""
+        """ Frees the pins.  This avoids errors if the service is restarted. 
+        This is a wrapper around the GPIO cleanup method"""
         GPIO.cleanup()
 
 
 class Relay(Component):
+    """For working with a Sainsmart 4 Channel Relay Module.
+    
+    Attributes:
+        mode: An int identifying the GPIO numbering scheme.  Best practice
+            is to use the GPIO constants GPIO.BCM and GPIO.BOARD.
+        red: An int representing the pin controlling the red light
+        yellow: An int representing the pin controlling the yellow light.
+        green: An int representing the pin contolling the green light.
+    """
 
-    """ unintuitive mapping """
+    # unintuitive mapping
     LIGHT_ON = GPIO.LOW
     LIGHT_OFF = GPIO.HIGH
 
@@ -53,24 +70,25 @@ class Relay(Component):
     def turn_on(self, color):
         if color not in [self.red, self.yellow, self.green]:
             return
-        
+
         sleep(.5)
 
         GPIO.output(color, Relay.LIGHT_ON)
-        
+
     def turn_on_only(self, color):
         """ Turn on only the color light specified.
-        There is a built-in software debounce which is actually attempting to mitigate
+        There is a built-in software debounce which
+        is actually attempting to mitigate
         a potential ground loop problem."""
 
         """ validate input """
-	if color not in [self.red, self.yellow, self.green]:
-	    return
+        if color not in [self.red, self.yellow, self.green]:
+            return
 
         # software debouce: wait .5 seconds
         sleep(.5)
 
-	self.turn_off_all()
+        self.turn_off_all()
 
         GPIO.output(color, Relay.LIGHT_ON)
 
@@ -83,7 +101,7 @@ class USonic(Component):
         The default board mode is set to GPIO.BCM."""
 
         super(USonic, self).__init__(mode)
-        
+
         self.trigger = trigger
         self.echo = echo
 
@@ -122,7 +140,8 @@ class USonic(Component):
 
 class HallEffectPair(Component):
     def __init__(self, open_door=17, closed_door=4, mode=GPIO.BCM):
-        """ Defines the GPIO channels for reading the status of two hall effect sensors.
+        """ Defines the GPIO channels for reading
+        the status of two hall effect sensors.
         The default channel of the sensor for the open position is 17.
         The default channel of the sensor for the closed position is 4.
         The default board mode is set to GPIO.BCM."""
@@ -136,7 +155,8 @@ class HallEffectPair(Component):
         GPIO.setup(self.closed_door, GPIO.IN)
 
     def add_event_detect(self, channel, callback):
-        GPIO.add_event_detect(channel, GPIO.FALLING, callback=callback, bouncetime=2000)
+        GPIO.add_event_detect(channel, GPIO.FALLING,
+                              callback=callback, bouncetime=2000)
 
     def get_state(self, channel):
         return GPIO.input(channel)
