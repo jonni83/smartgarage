@@ -20,6 +20,14 @@ right_open_time = datetime.now() - timedelta(minutes=1)
 
 
 def ConfigSectionMap(section):
+    """Create a dict out of any section of a config file.
+
+    Args:
+        section: name of the section
+
+    Returns:
+        dict: key/value pairs of each entry within the section
+    """
     dict1 = {}
     options = config.options(section)
     for option in options:
@@ -33,33 +41,43 @@ def ConfigSectionMap(section):
     return dict1
 
 
-def park_assist(channel):
-    usonic = USonic()
-    relay = Relay()
-    while 1:
-        distance = usonic.get_distance()
-        # 10 feet
-        if distance > 305:
-            relay.turn_on_only(relay.green)
-        # 1 foot
-        elif distance > 95:
-            relay.turn_on_only(relay.yellow)
-        else:
-            relay.turn_on_only(relay.red)
-        time.sleep(1)
-
-
 def set_left_time(channel):
+    """Set the global timestamp for the last time
+    the left garage bay door was opened. This is meant to be used
+    inside a GPIO callback.
+
+    Args:
+        channel: Not used, required in function defintion by GPIO.
+    """
     global left_open_time
     left_open_time = datetime.now()
 
 
 def set_right_time(channel):
+    """Set the global timestamp for the last time
+    the left garage bay door was opened. This is meant to be used
+    inside a GPIO callback.
+
+    Args:
+        channel: Not used, required in function defintion by GPIO.
+    """
     global right_open_time
     right_open_time = datetime.now()
 
 
 def distance_threshold(time, us):
+    """Determines the threshold that has been reached by the car.
+
+    Args:
+        time: the timestamp for when the door was last opened
+        us: the ultrasonic sensor that is being observed
+
+    Returns:
+        4 if garage door has been open for a while
+        3 if the distance is over 10 ft
+        2 if the distance is over 1 ft
+        1 if the distance is 1 ft or less
+    """
     if datetime.now()-time > timedelta(seconds=60):
         return 4
 
@@ -75,6 +93,9 @@ def distance_threshold(time, us):
 
 
 if __name__ == "__main__":
+    """Read the config parameters, initialize all the sensors,
+    and loop the logic show the proper light.
+    """
     config.read(configfile)
     mode = ConfigSectionMap("General")['mode']
     if mode == 'bcm':
