@@ -81,14 +81,21 @@ class Relay(Component):
         is actually attempting to mitigate
         a potential ground loop problem."""
 
+        colors = [self.red, self.yellow, self.green]
+
         """ validate input """
-        if color not in [self.red, self.yellow, self.green]:
+        if color not in colors:
             return
 
         # software debouce: wait .5 seconds
         sleep(.5)
 
-        self.turn_off_all()
+        # don't waste time turning off an extra light
+        # also, if light is already on, don't flicker
+        colors = colors.remove(color)
+
+        for color in colors:
+            GPIO.output(pin, Relay.LIGHT_OFF)
 
         GPIO.output(color, Relay.LIGHT_ON)
 
