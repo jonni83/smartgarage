@@ -3,7 +3,7 @@
 
 import sys, os.path
 sys.path.append(os.path.expanduser('/home/pi/development/smartgarage/src'))
-import ConfigParser
+from ConfigParser import ConfigParser
 import RPi.GPIO as GPIO
 import time
 from SmartGarage.smartgarage import HallEffectPair

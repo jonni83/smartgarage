@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
 import sys, os.path
 sys.path.append(os.path.expanduser('/home/pi/development/smartgarage/src'))
-import ConfigParser
+from Config Parser import ConfigParser
 import RPi.GPIO as GPIO
 import time
 from SmartGarage.smartgarage import Relay

@@ -4,7 +4,7 @@
 import sys
 import os.path
 sys.path.append(os.path.expanduser('/home/pi/development/smartgarage/src'))
-import ConfigParser
+from ConfigParser import ConfigParser
 import RPi.GPIO as GPIO
 import zerorpc
 from SmartGarage.smartgarage import USonic

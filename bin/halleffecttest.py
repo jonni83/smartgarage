@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import ConfigParser
+from ConfigParser import ConfigParser
 import RPi.GPIO as GPIO
 import time
 from SmartGarage.smartgarage import HallEffectPair
@@ -17,10 +17,10 @@ heleft = HallEffectPair(int(he['leftopen']), int(he['leftclosed']), mode)
 heright = HallEffectPair(int(he['rightopen']), int(he['rightclosed']), mode)
 relay = Relay(int(re['red']), int(re['yellow']), int(re['green']), mode)
 
-GPIO.add_event_detect(OPENDOOR, GPIO.FALLING, callback=turnongreen, bouncetime=1000)
-GPIO.add_event_detect(CLOSEDDOOR, GPIO.FALLING, callback=turnonred, bouncetime=1000)
+GPIO.add_event_detect(HallEffectPair.OPENDOOR, GPIO.FALLING, callback=turnongreen, bouncetime=1000)
+GPIO.add_event_detect(HallEffectPair.CLOSEDDOOR, GPIO.FALLING, callback=turnonred, bouncetime=1000)
 
 while 1:
 	print "turning on yellow light"
-	turnonlight(YELLOW)
+	turnonlight(Relay.YELLOW)
 	time.sleep(5)

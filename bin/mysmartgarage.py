@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-# import SmartGarage.smartgarage
-import ConfigParser
+from ConfigParser import ConfigParser
 
 configfile = "smartgarage.ini"
 
